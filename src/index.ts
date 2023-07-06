@@ -21,3 +21,36 @@ class Block implements BlockShape {
     return crypto.createHash('sha256').update(toHash).digest('hex')
   }
 }
+
+class Blockchain {
+  private blocks: Block[]
+  constructor() {
+    this.blocks = []
+  }
+  private getPrevHash() {
+    if (this.blocks.length === 0) return ''
+    return this.blocks[this.blocks.length - 1].hash
+  }
+  public addBlock(data: string) {
+    const newBlock = new Block(this.getPrevHash(), this.blocks.length + 1, data)
+    this.blocks.push(newBlock)
+  }
+  public getBlocks() {
+    // 이렇게 바로 리턴을 하면 보안상 문제가 있다.
+    // return this.blocks
+
+    return [...this.blocks]
+  }
+}
+
+const blockchain = new Blockchain()
+
+blockchain.addBlock('First one')
+blockchain.addBlock('Second one')
+blockchain.addBlock('Third one')
+blockchain.addBlock('Fourth one')
+
+// 당신의 블록체인은 해킹당했다.
+blockchain.getBlocks().push(new Block('xxxxx', 11111, 'HACKEDDDDD'))
+
+console.log(blockchain.getBlocks())
